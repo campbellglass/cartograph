@@ -35,6 +35,12 @@ return other.x - this.x;
 return other.y - this.y;
 }
 
+public double distanceTo(Point other) {
+double dX = Math.pow(this.getX() - other.getX(), 2.0);
+double dY = Math.pow(this.getY() - other.getY(), 2.0);
+return Math.pow(dX + dY, 0.5);
+}
+
 }
 
 

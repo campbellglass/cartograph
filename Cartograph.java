@@ -11,14 +11,16 @@ private int cols;
 private Datum[][] map;
 private Set<Point> known;
 
-private final int ROWS = 10;
-private final int COLS = 10;
+private final int ROWS = 20;
+private final int COLS = 20;
 
 private final int PEAKS = 5;
 private final int TROUGHS = 5;
 
 private final double MAX_HEIGHT = 100.0;
 private final double MIN_HEIGHT = 0.0;
+
+private final int K = 4; // nearest neighbors
 
 private final Random R = new Random();
 
@@ -108,13 +110,8 @@ public void generateMap() {
 Point p;
 
 while (known.size() < this.rows * this.cols) { // while we still have points to get
-p = this.randomLocation();;
-while (known.contains(p)) { // get new points until we find a new one
-// THIS IS A HIGHLY INEFFICIENT PLACEHOLDER
-p = randomLocation();;
-}
-
-double elev = this.assignElev(p.getX(), p.getY());
+p = unknownLocation();
+double elev = this.assignElev(p);
 Datum d = new Datum(p, elev);
 this.plot(d);
 
@@ -122,8 +119,49 @@ this.plot(d);
 
 }
 
-public double assignElev(int x, int y) {
-return 0.5;
+public double assignElev(Point p) {
+Map<Datum, Double> neighbors = this.kNearestNeighbors(p, this.K);
+return this.meanDistance(p, neighbors);
+}
+
+// TODO: make nearestneighbormaps a self-contained class
+private Map<Datum, Double> kNearestNeighbors(Point focus, int k) {
+Map<Datum, Double> nearest = new TreeMap<Datum, Double>();
+for (Point p : this.known) {
+double distance = focus.distanceTo(p);
+nearest.put(this.getDatum(p), distance);
+if (nearest.keySet().size() > k) {
+this.removeFarthest(nearest);
+}
+}
+return nearest;
+}
+
+private void removeFarthest(Map<Datum, Double> nearest) {
+double max = -1.0;
+Datum maxKey = null;
+for (Datum key : nearest.keySet()) {
+double distance = nearest.get(key);
+if (distance > max) {
+max = distance;
+maxKey = key;
+}
+}
+nearest.remove(maxKey);
+}
+
+/*
+ * Calculates the distance-weighted mean elevation in a neighbormap
+ */
+public double meanDistance(Point p, Map<Datum, Double> neighbors) {
+double weightedElev = 0.0;
+double totalWeight = 0.0;
+for (Datum key : neighbors.keySet()) {
+double weight = 1.0 / neighbors.get(key);;
+weightedElev += key.getElev() * weight;
+totalWeight += weight;
+}
+return weightedElev / totalWeight;
 }
 
 /*
@@ -146,7 +184,11 @@ private static String stringElev(Datum d) {
 if (d == null) {
 return "---";
 } else {
-return "" + d.getElev();
+String rep = "" + d.getElev();
+if (rep.length() > 5) { // max length of 5
+rep = rep.substring(0, 5);
+}
+return rep;
 }
 }
 
