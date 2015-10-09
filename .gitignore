@@ -8,6 +8,9 @@ Desktop.ini
 # Compiled Files
 *.class
 
+# Data Files
+*.tsv
+
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
