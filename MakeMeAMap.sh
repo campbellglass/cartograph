@@ -4,7 +4,7 @@ FILENAME="temp.tsv"
 
 java RunCartograph > $FILENAME
 
-# python PlotCartograph.py $FILENAME
+python PlotCartograph.py $FILENAME
 
 RESPONSE="-"
 echo $RESPONSE
