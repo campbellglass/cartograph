@@ -1,6 +1,6 @@
 package cartograph;
 
-/*
+/**
  * Represents an immutable point in 2-dimensional space
  */
 public class Point implements Comparable<Point> {
@@ -14,21 +14,21 @@ public class Point implements Comparable<Point> {
     this.y = y;
   }
 
-  /*
+  /**
    * Gets the x-coordinate of this point
    */
   public int getX() {
     return this.x;
   }
 
-  /*
+  /**
    * Gets the y-coordinate of this point
    */
   public int getY() {
     return this.y;
   }
 
-  /*
+  /**
    * Returns true if this point is equal to the other point.
    * Equality for points is defined as occupying the same point in space.
    */
@@ -40,7 +40,7 @@ public class Point implements Comparable<Point> {
     return this.x == other.x && this.y == other.y;
   }
 
-  /*
+  /**
    * Returns negative if this point is to the right of other,
    * or if this point is equally right but below other
    * Returns positive if this point is to the left of other,
@@ -54,7 +54,7 @@ public class Point implements Comparable<Point> {
     return other.y - this.y;
   }
 
-  /*
+  /**
    * Returns the pythagorean distance from this point to the other point
    */
   public double distanceTo(Point other) {

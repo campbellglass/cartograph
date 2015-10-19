@@ -3,8 +3,6 @@ package cartograph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -14,12 +12,19 @@ import java.util.TreeSet;
  * TODO: Should use the builder pattern
  */
 public class Cartograph {
-
-	private int rows;
-	private int cols;
-	private Datum[][] map;
-	private Set<Point> known;
+	
+	private int rows; // the number of rows in the map grid
+	private int cols; // the number of columns in the map grid
+	private Datum[][] map; // the map grid
+	private Set<Point> known; // the known points on the map
 	//TODO: make a Neighborhood k-d tree that does the known Set and nearest neighbor functionality
+	
+	private int peaks; // the number of local maxima present
+	private int troughs; // the number of local minima present
+	private double maxHeight; // the height of the peaks
+	private double minHeight; // the depth of the troughs
+	
+	private int k; // the number of nearest neighbors to use in elevation assignment
 
 	private final int ROWS = 20;
 	private final int COLS = 20;
@@ -33,13 +38,60 @@ public class Cartograph {
 	private final int K = 4; // nearest neighbors
 	
 	public Cartograph() {
-		this.rows = this.ROWS;
-		this.cols = this.COLS;
+		this.setRows(ROWS);
+		this.setCols(COLS);
 		this.map = new Datum[rows][cols];
 		this.known = new TreeSet<Point>();
 		
+		this.setPeaks(PEAKS);
+		this.setTroughs(TROUGHS);
+		this.setMaxHeight(MAX_HEIGHT);
+		this.setMinHeight(MIN_HEIGHT);
+		
 		this.generateMap();
 
+	}
+	
+	public void setRows(int r) {
+		this.rows = r;
+	}
+	
+	public void setCols(int c) {
+		this.cols = c;
+	}
+	
+	/**
+	 * Creates an empty map grid to populate
+	 */
+	public void createMapBase() {
+		this.map = new Datum[rows][cols];
+	}
+	
+	/**
+	 * Creates an empty known set
+	 */
+	public void createKnownSet() {
+		this.known = new TreeSet<Point>();
+	}
+	
+	public void setPeaks(int p) {
+		this.peaks = p;
+	}
+	
+	public void setTroughs(int t) {
+		this.troughs = t;
+	}
+	
+	public void setMaxHeight(double max) {
+		this.maxHeight = max;
+	}
+	
+	public void setMinHeight(double min) {
+		this.minHeight = min;
+	}
+	
+	public void setK(int k) {
+		this.k = k;
 	}
 	
 	/**
