@@ -12,88 +12,65 @@ import java.util.TreeSet;
  * TODO: Should use the builder pattern
  */
 public class Cartograph {
-	
+
 	private int rows; // the number of rows in the map grid
 	private int cols; // the number of columns in the map grid
 	private Datum[][] map; // the map grid
 	private Set<Point> known; // the known points on the map
 	//TODO: make a Neighborhood k-d tree that does the known Set and nearest neighbor functionality
-	
+
 	private int peaks; // the number of local maxima present
 	private int troughs; // the number of local minima present
 	private double maxHeight; // the height of the peaks
 	private double minHeight; // the depth of the troughs
-	
+
 	private int k; // the number of nearest neighbors to use in elevation assignment
 
-	private final int ROWS = 20;
-	private final int COLS = 20;
-
-	private final int PEAKS = 5;
-	private final int TROUGHS = 5;
-
-	private final double MAX_HEIGHT = 100.0;
-	private final double MIN_HEIGHT = 0.0;
-
-	private final int K = 4; // nearest neighbors
-	
 	public Cartograph() {
-		this.setRows(ROWS);
-		this.setCols(COLS);
-		this.map = new Datum[rows][cols];
-		this.known = new TreeSet<Point>();
-		
-		this.setPeaks(PEAKS);
-		this.setTroughs(TROUGHS);
-		this.setMaxHeight(MAX_HEIGHT);
-		this.setMinHeight(MIN_HEIGHT);
-		
-		this.generateMap();
-
 	}
-	
+
 	public void setRows(int r) {
 		this.rows = r;
 	}
-	
+
 	public void setCols(int c) {
 		this.cols = c;
 	}
-	
+
 	/**
 	 * Creates an empty map grid to populate
 	 */
 	public void createMapBase() {
 		this.map = new Datum[rows][cols];
 	}
-	
+
 	/**
 	 * Creates an empty known set
 	 */
 	public void createKnownSet() {
 		this.known = new TreeSet<Point>();
 	}
-	
+
 	public void setPeaks(int p) {
 		this.peaks = p;
 	}
-	
+
 	public void setTroughs(int t) {
 		this.troughs = t;
 	}
-	
+
 	public void setMaxHeight(double max) {
 		this.maxHeight = max;
 	}
-	
+
 	public void setMinHeight(double min) {
 		this.minHeight = min;
 	}
-	
+
 	public void setK(int k) {
 		this.k = k;
 	}
-	
+
 	/**
 	 * TODO: needs a better name
 	 * @return A random ordering of all points in the cartograph
@@ -128,11 +105,11 @@ public class Cartograph {
 	}
 
 	private void generatePeaks(List<Point> randomQueue) {
-		this.generatePoints(randomQueue, this.PEAKS, this.MAX_HEIGHT);
+		this.generatePoints(randomQueue, this.peaks, this.maxHeight);
 	}
 
 	private void generateTroughs(List<Point> randomQueue) {
-		this.generatePoints(randomQueue, this.TROUGHS, this.MIN_HEIGHT);
+		this.generatePoints(randomQueue, this.troughs, this.minHeight);
 	}
 
 	private void generatePoints(List<Point> randomQueue, int count, double elev) {
@@ -183,7 +160,7 @@ public class Cartograph {
 	 * Based on some algorithm on the existing cartograph
 	 */
 	public double calcElev(Point p) {
-		Map<Datum, Double> neighbors = this.kNearestNeighbors(p, this.K);
+		Map<Datum, Double> neighbors = this.kNearestNeighbors(p, this.k);
 		return this.meanDistance(p, neighbors);
 	}
 
