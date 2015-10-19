@@ -1,3 +1,5 @@
+package cartograph;
+
 /**
  * Shell for creating new Cartograph maps
  */

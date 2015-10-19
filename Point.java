@@ -1,7 +1,8 @@
+package cartograph;
+
 /*
  * Represents an immutable point in 2-dimensional space
  */
-
 public class Point implements Comparable<Point> {
   
   // 2-d coordinates of this point

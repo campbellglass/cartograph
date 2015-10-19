@@ -1,7 +1,8 @@
+package cartograph;
+
 /*
  * Represents metadata about an immutable point in space
  */
-
 public class Datum implements Comparable<Datum> {
 
   private final Point p; // the point in space in question
